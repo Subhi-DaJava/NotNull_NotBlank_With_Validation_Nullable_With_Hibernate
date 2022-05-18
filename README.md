@@ -11,3 +11,8 @@
 ## De plus, il est généralement préférable de s'appuyer sur les règles standard définies dans le `Bean Validation`, plutôt que de laisser `la base de données` gérer `la logique de validation`. 
 ## Mais, même si `Hibernate` générer le `schéma` de la base de données, il traduira l'annotation `@NotNull` dans les contraintes de la base de données. 
 ## Assurons la `propriété hibernate` `validator.apply_to_ddl est définie=true`.
+
+##Petit Rappel :
+### `@NotNull` :  un CharSequence, Collection, Map ou Array contraint est `valide` tant qu'il n'est pas `nul`, mais il peut être `vide`.
+### `@NotEmpty` : un CharSequence, Collection, Map ou Array contraint est `valide` tant qu'il n'est pas `nul` et que sa `taille/longueur` est `supérieure à zéro`.
+### `@NotBlank` : une `chaîne de caractères` contrainte est valide tant qu'elle `n'est pas nulle` et que `la longueur coupée` est `supérieure à zéro`.
