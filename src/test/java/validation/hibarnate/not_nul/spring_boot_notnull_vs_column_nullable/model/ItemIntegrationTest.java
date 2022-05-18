@@ -1,6 +1,5 @@
 package validation.hibarnate.not_nul.spring_boot_notnull_vs_column_nullable.model;
 
-import jdk.jfr.Enabled;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +42,18 @@ class ItemIntegrationTest {
      * Cependant, si, pour une raison quelconque, nous voulons désactiver cette fonctionnalité Hibernate, tout ce que nous devons faire est de définir
      * la propriété hibernate.validator.apply_to_ddl sur false.
      */
+    /*
+     * Troisième étape :
+     * @Column(nullable = false)
+     * private BigDecimal price;
+     *
+     */
 
-    @Test
+  /*  @Test
     @Disabled
     public void shouldNotAllowToPersistNullItemsPrice(){
         //Test échoue, car item.price est null
-        /*Item newItem =*/ itemRepository.save(new Item());
+        *//*Item newItem =*//* itemRepository.save(new Item());
        // assertThat(newItem).isNull();
     }
 
@@ -69,5 +74,33 @@ class ItemIntegrationTest {
         Item savedItem = itemRepository.save(newItem);
         assertThat(savedItem).isNotNull();
         assertThat(savedItem.getId()).isEqualTo(1);
+
+        Tout d'abord, nous pouvons remarquer qu'Hibernate a généré la colonne de prix avec la contrainte non nulle comme nous l'avions prévu .
+        De plus, il a pu créer la requête d'insertion SQL et la transmettre. Par conséquent, c'est la base de données sous-jacente qui a déclenché l'erreur.
+
+        Note :
+        Presque toutes les sources soulignent que @Column(nullable = false) n'est utilisé que pour la génération de schéma DDL.
+        Hibernate, cependant, est capable d'effectuer la validation de l'entité par rapport aux éventuelles valeurs nulles,
+        même si le champ correspondant est annoté uniquement avec @Column(nullable = false).
+
+        important:
+        Afin d'activer cette fonctionnalité Hibernate, nous devons définir explicitement la propriété hibernate.check_nullability sur true :
+        spring.jpa.show-sql=true
+        spring.jpa.properties.hibernate.check_nullability=true
+
+        Cette fois, notre cas de test a lancé l' exception org.hibernate.PropertyValueException .
+        Il est crucial de noter que, dans ce cas, Hibernate n'a pas envoyé la requête SQL d'insertion à la base de données .
+
+    }*/
+
+    //Pour la troisième étape
+    @Test
+    public void shouldNotAllowToPersistNullItemsPrice() {
+        Item newItem = new Item();
+        newItem.setItemName("new item");
+        itemRepository.save(newItem);
+        assertThat(newItem).isNull();
     }
+
+
 }
